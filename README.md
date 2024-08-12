@@ -1,16 +1,35 @@
-# test_task_store
+# Тестовое задание
 
-A new Flutter project.
 
-## Getting Started
+## Превью
+https://github.com/user-attachments/assets/5c58e5fe-3285-42c2-b820-680f5fe61e02
 
-This project is a starting point for a Flutter application.
+## Стек:
+- riverpod
+- go_router
+- drift
+- shared_preferences
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## ТЗ
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+При запуске приложения появляется страница регистрации/авторизации ( можно использовать фейк данные, без запроса куда либо). Должна быть валидация данных.
+
+После попадаем на главную страницу,  где у нас три экрана:
+
+- Экран с карточками товара
+
+Карточка товара должна содержать минимально необходимую информацию - наименование товара, описание, изображение, избранное. Дизайн на свое усмотрение
+
+- Экран Избранное
+
+Необходимый функционал - добавить/удалить из избранного
+
+- Экран Профиль
+Отобразить имя при авторизации и кнопка выхода
+
+Для написания приложения
+
+Обязательно -  пакеты riverpod, go_router и пункты выше
+
+Не обязательно, но желательно -  Поиск по товарам. Использование  локальной SQL или NoSQL базы. Нижняя панель навигации
