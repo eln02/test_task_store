@@ -5,10 +5,11 @@
 https://github.com/user-attachments/assets/5c58e5fe-3285-42c2-b820-680f5fe61e02
 
 ## Стек:
-- riverpod
-- go_router
-- drift
-- shared_preferences
+- [riverpod](https://riverpod.dev/)
+- [go_router](https://pub.dev/packages/go_router)
+- [drift](https://pub.dev/packages/drift)
+- [shared_preferences](https://pub.dev/packages/shared_preferences)
+- [fuzzywuzzy](https://pub.dev/packages/fuzzywuzzy)(фаззовый поиск)
 
 
 ## ТЗ
