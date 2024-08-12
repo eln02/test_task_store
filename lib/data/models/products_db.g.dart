@@ -40,6 +40,14 @@ class $MyProductsTable extends MyProducts
           minTextLength: 1, maxTextLength: 5000),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+      'url', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 1, maxTextLength: 5000),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
   static const VerificationMeta _isFavoriteMeta =
       const VerificationMeta('isFavorite');
   @override
@@ -51,7 +59,7 @@ class $MyProductsTable extends MyProducts
           'CHECK ("is_favorite" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, price, description, isFavorite];
+      [id, name, price, description, url, isFavorite];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -85,6 +93,12 @@ class $MyProductsTable extends MyProducts
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
+    if (data.containsKey('url')) {
+      context.handle(
+          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
     if (data.containsKey('is_favorite')) {
       context.handle(
           _isFavoriteMeta,
@@ -110,6 +124,8 @@ class $MyProductsTable extends MyProducts
           .read(DriftSqlType.double, data['${effectivePrefix}price'])!,
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      url: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}url'])!,
       isFavorite: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_favorite'])!,
     );
@@ -126,12 +142,14 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
   final String name;
   final double price;
   final String description;
+  final String url;
   final bool isFavorite;
   const MyProduct(
       {required this.id,
       required this.name,
       required this.price,
       required this.description,
+      required this.url,
       required this.isFavorite});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -140,6 +158,7 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
     map['name'] = Variable<String>(name);
     map['price'] = Variable<double>(price);
     map['description'] = Variable<String>(description);
+    map['url'] = Variable<String>(url);
     map['is_favorite'] = Variable<bool>(isFavorite);
     return map;
   }
@@ -150,6 +169,7 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
       name: Value(name),
       price: Value(price),
       description: Value(description),
+      url: Value(url),
       isFavorite: Value(isFavorite),
     );
   }
@@ -162,6 +182,7 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
       name: serializer.fromJson<String>(json['name']),
       price: serializer.fromJson<double>(json['price']),
       description: serializer.fromJson<String>(json['description']),
+      url: serializer.fromJson<String>(json['url']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
     );
   }
@@ -173,6 +194,7 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
       'name': serializer.toJson<String>(name),
       'price': serializer.toJson<double>(price),
       'description': serializer.toJson<String>(description),
+      'url': serializer.toJson<String>(url),
       'isFavorite': serializer.toJson<bool>(isFavorite),
     };
   }
@@ -182,12 +204,14 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
           String? name,
           double? price,
           String? description,
+          String? url,
           bool? isFavorite}) =>
       MyProduct(
         id: id ?? this.id,
         name: name ?? this.name,
         price: price ?? this.price,
         description: description ?? this.description,
+        url: url ?? this.url,
         isFavorite: isFavorite ?? this.isFavorite,
       );
   MyProduct copyWithCompanion(MyProductsCompanion data) {
@@ -197,6 +221,7 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
       price: data.price.present ? data.price.value : this.price,
       description:
           data.description.present ? data.description.value : this.description,
+      url: data.url.present ? data.url.value : this.url,
       isFavorite:
           data.isFavorite.present ? data.isFavorite.value : this.isFavorite,
     );
@@ -209,13 +234,15 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
           ..write('name: $name, ')
           ..write('price: $price, ')
           ..write('description: $description, ')
+          ..write('url: $url, ')
           ..write('isFavorite: $isFavorite')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, price, description, isFavorite);
+  int get hashCode =>
+      Object.hash(id, name, price, description, url, isFavorite);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -224,6 +251,7 @@ class MyProduct extends DataClass implements Insertable<MyProduct> {
           other.name == this.name &&
           other.price == this.price &&
           other.description == this.description &&
+          other.url == this.url &&
           other.isFavorite == this.isFavorite);
 }
 
@@ -232,12 +260,14 @@ class MyProductsCompanion extends UpdateCompanion<MyProduct> {
   final Value<String> name;
   final Value<double> price;
   final Value<String> description;
+  final Value<String> url;
   final Value<bool> isFavorite;
   const MyProductsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.price = const Value.absent(),
     this.description = const Value.absent(),
+    this.url = const Value.absent(),
     this.isFavorite = const Value.absent(),
   });
   MyProductsCompanion.insert({
@@ -245,16 +275,19 @@ class MyProductsCompanion extends UpdateCompanion<MyProduct> {
     required String name,
     required double price,
     required String description,
+    required String url,
     required bool isFavorite,
   })  : name = Value(name),
         price = Value(price),
         description = Value(description),
+        url = Value(url),
         isFavorite = Value(isFavorite);
   static Insertable<MyProduct> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<double>? price,
     Expression<String>? description,
+    Expression<String>? url,
     Expression<bool>? isFavorite,
   }) {
     return RawValuesInsertable({
@@ -262,6 +295,7 @@ class MyProductsCompanion extends UpdateCompanion<MyProduct> {
       if (name != null) 'name': name,
       if (price != null) 'price': price,
       if (description != null) 'description': description,
+      if (url != null) 'url': url,
       if (isFavorite != null) 'is_favorite': isFavorite,
     });
   }
@@ -271,12 +305,14 @@ class MyProductsCompanion extends UpdateCompanion<MyProduct> {
       Value<String>? name,
       Value<double>? price,
       Value<String>? description,
+      Value<String>? url,
       Value<bool>? isFavorite}) {
     return MyProductsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       price: price ?? this.price,
       description: description ?? this.description,
+      url: url ?? this.url,
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
@@ -296,6 +332,9 @@ class MyProductsCompanion extends UpdateCompanion<MyProduct> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
     if (isFavorite.present) {
       map['is_favorite'] = Variable<bool>(isFavorite.value);
     }
@@ -309,6 +348,7 @@ class MyProductsCompanion extends UpdateCompanion<MyProduct> {
           ..write('name: $name, ')
           ..write('price: $price, ')
           ..write('description: $description, ')
+          ..write('url: $url, ')
           ..write('isFavorite: $isFavorite')
           ..write(')'))
         .toString();
@@ -331,6 +371,7 @@ typedef $$MyProductsTableCreateCompanionBuilder = MyProductsCompanion Function({
   required String name,
   required double price,
   required String description,
+  required String url,
   required bool isFavorite,
 });
 typedef $$MyProductsTableUpdateCompanionBuilder = MyProductsCompanion Function({
@@ -338,6 +379,7 @@ typedef $$MyProductsTableUpdateCompanionBuilder = MyProductsCompanion Function({
   Value<String> name,
   Value<double> price,
   Value<String> description,
+  Value<String> url,
   Value<bool> isFavorite,
 });
 
@@ -362,6 +404,7 @@ class $$MyProductsTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<double> price = const Value.absent(),
             Value<String> description = const Value.absent(),
+            Value<String> url = const Value.absent(),
             Value<bool> isFavorite = const Value.absent(),
           }) =>
               MyProductsCompanion(
@@ -369,6 +412,7 @@ class $$MyProductsTableTableManager extends RootTableManager<
             name: name,
             price: price,
             description: description,
+            url: url,
             isFavorite: isFavorite,
           ),
           createCompanionCallback: ({
@@ -376,6 +420,7 @@ class $$MyProductsTableTableManager extends RootTableManager<
             required String name,
             required double price,
             required String description,
+            required String url,
             required bool isFavorite,
           }) =>
               MyProductsCompanion.insert(
@@ -383,6 +428,7 @@ class $$MyProductsTableTableManager extends RootTableManager<
             name: name,
             price: price,
             description: description,
+            url: url,
             isFavorite: isFavorite,
           ),
         ));
@@ -408,6 +454,11 @@ class $$MyProductsTableFilterComposer
 
   ColumnFilters<String> get description => $state.composableBuilder(
       column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get url => $state.composableBuilder(
+      column: $state.table.url,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -437,6 +488,11 @@ class $$MyProductsTableOrderingComposer
 
   ColumnOrderings<String> get description => $state.composableBuilder(
       column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get url => $state.composableBuilder(
+      column: $state.table.url,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

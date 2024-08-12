@@ -11,6 +11,7 @@ extension MyProductToFavProductExtension on MyProduct {
       price: price,
       description: description,
       isFavorite: isFavorite,
+      url: url
     );
   }
 }
@@ -22,7 +23,8 @@ extension FavProductToMyProduct on Product {
         name: name,
         price: price,
         description: description,
-        isFavorite: isFavorite);
+        isFavorite: isFavorite,
+        url: url);
   }
 }
 

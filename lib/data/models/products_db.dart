@@ -8,6 +8,7 @@ class MyProducts extends Table {
   TextColumn get name => text().withLength(min: 1, max: 100)();
   RealColumn get price => real()();
   TextColumn get description => text().withLength(min: 1, max: 5000)();
+  TextColumn get url => text().withLength(min: 1, max: 5000)();
   BoolColumn get isFavorite => boolean()();
 }
 

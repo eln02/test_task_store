@@ -3,6 +3,7 @@ class Product {
   final String name;
   final double price;
   final String description;
+  final String url;
   bool isFavorite;
 
   Product({
@@ -11,6 +12,7 @@ class Product {
     required this.description,
     required this.price,
     required this.name,
+    required this.url,
   });
 
   // Метод copyWith для клонирования и возможности изменения некоторых полей
@@ -19,6 +21,7 @@ class Product {
     String? name,
     double? price,
     String? description,
+    String? url,
     bool? isFavorite,
   }) {
     return Product(
@@ -27,6 +30,7 @@ class Product {
       price: price ?? this.price,
       description: description ?? this.description,
       isFavorite: isFavorite ?? this.isFavorite,
+      url: url ?? this.url
     );
   }
 
@@ -40,7 +44,8 @@ class Product {
         other.name == name &&
         other.price == price &&
         other.description == description &&
-        other.isFavorite == isFavorite;
+        other.isFavorite == isFavorite &&
+        other.url == url;
   }
 
   // Переопределение метода hashCode
@@ -50,7 +55,8 @@ class Product {
     name.hashCode ^
     price.hashCode ^
     description.hashCode ^
-    isFavorite.hashCode;
+    isFavorite.hashCode ^
+    url.hashCode;
   }
 }
 

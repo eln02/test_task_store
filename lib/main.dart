@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_task_store/ui/routing/app_routing.dart';
-import 'package:test_task_store/ui/state/auth/auth_controller.dart';
-import 'package:test_task_store/ui/state/auth/auth_provider.dart';
-import 'package:test_task_store/ui/state/auth/auth_state.dart';
-import 'package:test_task_store/ui/state/products/auth_controller.dart';
-import 'package:test_task_store/ui/state/products/auth_state.dart';
-import 'package:test_task_store/ui/state/products/products_provider.dart';
+import 'package:test_task_store/presentation/routing/app_routing.dart';
+import 'package:test_task_store/presentation/state/auth/auth_controller.dart';
+import 'package:test_task_store/presentation/state/auth/auth_provider.dart';
+import 'package:test_task_store/presentation/state/auth/auth_state.dart';
+import 'package:test_task_store/presentation/state/products/products_controller.dart';
+import 'package:test_task_store/presentation/state/products/products_state.dart';
+import 'package:test_task_store/presentation/state/products/products_provider.dart';
 
 final ThemeData theme = ThemeData(
   useMaterial3: true,
   scaffoldBackgroundColor: Colors.white,
+  textTheme: const TextTheme(
+    bodyMedium: TextStyle(fontFamily: 'NotoSans'),
+  ),
 );
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // предзагрузка
   final n = MyStateController(ProductState(
       myProducts: [],
